@@ -43,12 +43,14 @@
                 <form th:action="@{/createPost}" method="POST">
                     <input type="hidden" name="id" value="0"/>
                     <div class="form-group">
-                        <label for="name">Имя</label>
-                            <input type="text" class="form-control" name="name" id="name">
+                        <label for="name">Вакансия</label>
+                            <input type="text" class="form-control"
+                                   name="name" id="name">
                     </div>
                     <div class="form-group">
-                        <label for="description">Имя</label>
-                        <input type="text" class="form-control" name="description" id="description">
+                        <label for="description">Описание</label>
+                        <input type="text" class="form-control"
+                               name="description" id="description">
                     </div>
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                 </form>
