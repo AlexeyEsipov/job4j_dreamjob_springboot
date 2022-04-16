@@ -13,7 +13,7 @@ import ru.job4j.dreamjob.service.PostService;
 public class PostControl {
 
     private final PostService store = PostService.instOf();
-    
+
     @GetMapping("/posts")
     public String posts(Model model) {
         model.addAttribute("posts", store.findAll());
