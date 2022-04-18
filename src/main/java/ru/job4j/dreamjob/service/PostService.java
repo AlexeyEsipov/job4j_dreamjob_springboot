@@ -1,11 +1,12 @@
 package ru.job4j.dreamjob.service;
 
 import org.springframework.stereotype.Service;
+import javax.annotation.concurrent.ThreadSafe;
 import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.persistence.PostStore;
-
 import java.util.Collection;
 
+@ThreadSafe
 @Service
 public class PostService {
 

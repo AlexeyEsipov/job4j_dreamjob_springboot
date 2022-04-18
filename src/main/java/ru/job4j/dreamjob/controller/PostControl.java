@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import javax.annotation.concurrent.ThreadSafe;
 import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.service.PostService;
 
+@ThreadSafe
 @Controller
 public class PostControl {
 
