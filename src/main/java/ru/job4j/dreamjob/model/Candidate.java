@@ -1,17 +1,20 @@
 package ru.job4j.dreamjob.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-public class Candidate {
+public class Candidate implements Serializable {
     private int id;
     private String name;
     private String description;
     private final LocalDateTime created =
             LocalDateTime.now().truncatedTo(TimeUnit.MINUTES.toChronoUnit());
+    private boolean visible;
+    private City city;
 
-    public Candidate(int id, String name, String description) {
+    public Candidate(int id, String name, String description, City city, boolean visible) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -60,5 +63,21 @@ public class Candidate {
 
     public LocalDateTime getCreated() {
         return created;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
     }
 }
