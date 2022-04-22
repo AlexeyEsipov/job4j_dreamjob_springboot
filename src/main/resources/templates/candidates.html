@@ -69,10 +69,9 @@
                     <span th:if="${!candidate.visible}">
                         <i class="fa fa-square-o"></i>
                     </span>
-
                 </td>
                 <td th:text="${candidate.description}"></td>
-                <td>Здесь город</td>
+                <td th:each="city : ${cities}" th:if="${city.id}==${candidate.city.id}" th:text="${city.name}" ></td>
                 <td th:text="${candidate.created}"></td>
             </tr>
             </tbody>

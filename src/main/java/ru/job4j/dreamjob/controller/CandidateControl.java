@@ -26,6 +26,7 @@ public class CandidateControl {
     @GetMapping("/candidates")
     public String candidates(Model model) {
         model.addAttribute("candidates", candidateService.findAll());
+        model.addAttribute("cities", cityService.getAllCities());
         return "candidates";
     }
 
