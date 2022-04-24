@@ -35,4 +35,8 @@ public class PostService {
         posts.forEach(post -> post.setCity(cityService.findById(post.getCity().getId())));
         return posts;
     }
+
+    public void delete(int id) {
+        store.delete(id);
+    }
 }

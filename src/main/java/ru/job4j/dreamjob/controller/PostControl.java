@@ -46,6 +46,12 @@ public class PostControl {
         return "updatePost";
     }
 
+    @GetMapping("/deletePost/{postId}")
+    public String deletePost(@PathVariable("postId") int id) {
+        postService.delete(id);
+        return "redirect:/posts";
+    }
+
     @PostMapping("/updatePost")
     public String updatePost(@ModelAttribute Post post) {
         postService.update(post);
