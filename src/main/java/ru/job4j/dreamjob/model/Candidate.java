@@ -15,7 +15,6 @@ public class Candidate implements Serializable {
     private City city;
     private byte[] photo;
 
-
     public Candidate(int id, String name, String description, City city, boolean visible) {
         this.id = id;
         this.name = name;
