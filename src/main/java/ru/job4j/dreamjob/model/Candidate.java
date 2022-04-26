@@ -23,6 +23,16 @@ public class Candidate implements Serializable {
         this.visible = visible;
     }
 
+//    public Candidate(int id, String name,
+//    String description, City city, boolean visible,  byte[] photo) {
+//        this.id = id;
+//        this.name = name;
+//        this.description = description;
+//        this.visible = visible;
+//        this.city = city;
+//        this.photo = photo;
+//    }
+
     public int getId() {
         return id;
     }

@@ -28,13 +28,12 @@ public class PostControl {
     @GetMapping("/posts")
     public String posts(Model model) {
         model.addAttribute("posts", postService.findAll());
-        model.addAttribute("cities", cityService.getAllCities());
         return "posts";
     }
 
     @GetMapping("/formAddPost")
     public String addPost(Model model) {
-        model.addAttribute("post", new Post(0, "Заполните поле", "Заполните поле", new City(), true));
+        model.addAttribute("post", new Post(0, "поле", "поле", new City(), true));
         model.addAttribute("cities", cityService.getAllCities());
         return "addPost";
     }

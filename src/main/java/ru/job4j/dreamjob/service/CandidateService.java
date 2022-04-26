@@ -30,10 +30,6 @@ public class CandidateService {
     }
 
     public Collection<Candidate> findAll() {
-        Collection<Candidate> candidates = store.findAll();
-        CityService cityService = new CityService();
-        candidates.forEach(
-                candidate -> candidate.setCity(cityService.findById(candidate.getCity().getId())));
         return store.findAll();
     }
 

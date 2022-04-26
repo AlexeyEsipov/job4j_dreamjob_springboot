@@ -11,7 +11,6 @@ import java.util.Collection;
 
 import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.model.City;
-import ru.job4j.dreamjob.service.CityService;
 
 @Repository
 public class CandidateDBStore {
@@ -25,16 +24,21 @@ public class CandidateDBStore {
     public Collection<Candidate> findAll() {
         Collection<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM candidate")) {
+             PreparedStatement ps =  cn.prepareStatement(
+                     "SELECT can.can_id, can.can_name, can.can_description, can.can_visible, "
+                         + "can.can_city_id, can.can_photo, city.city_name AS city_name "
+                         + "FROM candidate AS can JOIN city on can.can_city_id = city.city_id")) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    int cityId = it.getInt("city_id");
-                    CityService cityService = new CityService();
-                    City city = cityService.findById(cityId);
-                    Candidate candidate = new Candidate(it.getInt("id"), it.getString("name"),
-                            it.getString("description"), city,
-                            it.getBoolean("visible"));
-                    candidate.setPhoto(it.getBytes("photo"));
+                    City city = new City(it.getInt("can_city_id"), it.getString("city_name"));
+                    System.out.println(city);
+                    Candidate candidate = new Candidate(
+                            it.getInt("can_id"),
+                            it.getString("can_name"),
+                            it.getString("can_description"),
+                            city,
+                            it.getBoolean("can_visible"));
+                    candidate.setPhoto(it.getBytes("can_photo"));
                     candidates.add(candidate);
                 }
             }
@@ -47,7 +51,8 @@ public class CandidateDBStore {
     public Candidate add(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement(
-     "INSERT INTO candidate (name, description, visible, city_id, photo) VALUES (?, ?, ?, ?, ?)",
+     "INSERT INTO candidate (can_name, can_description, can_visible,"
+             + " can_city_id, can_photo) VALUES (?, ?, ?, ?, ?)",
          PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
@@ -69,8 +74,8 @@ public class CandidateDBStore {
     public void update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-        "UPDATE candidate SET name = ?, description = ?, "
-            + "visible = ?, city_id = ?, photo = ? WHERE id = ?")) {
+        "UPDATE candidate SET can_name = ?, can_description = ?, "
+            + "can_visible = ?, can_city_id = ?, can_photo = ? WHERE can_id = ?")) {
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
             ps.setBoolean(3, candidate.isVisible());
@@ -86,17 +91,20 @@ public class CandidateDBStore {
     public Candidate findById(int id) {
         Candidate candidate = null;
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM candidate WHERE id = ?")) {
+             PreparedStatement ps =  cn.prepareStatement(
+                 "SELECT can.can_id, can.can_name, can.can_description, can.can_visible, "
+                             + "can.can_city_id, can.can_photo, c.city_name AS city_name "
+                     + "FROM candidate AS can "
+                     + "JOIN city c on c.city_id = can.can_city_id "
+                     + "WHERE can_id = ?")) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    int cityId = it.getInt("city_id");
-                    CityService cityService = new CityService();
-                    City city = cityService.findById(cityId);
-                    candidate = new Candidate(it.getInt("id"), it.getString("name"),
-                            it.getString("description"), city,
-                            it.getBoolean("visible"));
-                    candidate.setPhoto(it.getBytes("photo"));
+                    City city = new City(it.getInt("can_city_id"), it.getString("city_name"));
+                    candidate = new Candidate(it.getInt("can_id"), it.getString("can_name"),
+                            it.getString("can_description"), city,
+                            it.getBoolean("can_visible"));
+                    candidate.setPhoto(it.getBytes("can_photo"));
                 }
             }
         } catch (Exception e) {
@@ -107,7 +115,7 @@ public class CandidateDBStore {
 
     public void delete(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("DELETE FROM candidate WHERE id = ?")) {
+             PreparedStatement ps = cn.prepareStatement("DELETE FROM candidate WHERE can_id = ?")) {
             ps.setInt(1, id);
             ps.execute();
         } catch (Exception e) {
