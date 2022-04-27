@@ -25,18 +25,18 @@ public class CandidateDBStore {
         Collection<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement(
-                     "SELECT can.can_id, can.can_name, can.can_description, can.can_visible, "
-                         + "can.can_city_id, can.can_photo, city.city_name AS city_name "
-                         + "FROM candidate AS can JOIN city on can.can_city_id = city.city_id")) {
+             "SELECT can.can_id, can.can_name, can.can_description, can.can_visible, "
+                 + "can.can_city_id, can.can_photo, city.city_name AS city_name "
+                 + "FROM candidate AS can JOIN city on can.can_city_id = city.city_id")) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    City city = new City(it.getInt("can_city_id"), it.getString("city_name"));
-                    System.out.println(city);
                     Candidate candidate = new Candidate(
                             it.getInt("can_id"),
                             it.getString("can_name"),
                             it.getString("can_description"),
-                            city,
+                            new City(
+                                    it.getInt("can_city_id"),
+                                    it.getString("city_name")),
                             it.getBoolean("can_visible"));
                     candidate.setPhoto(it.getBytes("can_photo"));
                     candidates.add(candidate);
@@ -51,9 +51,9 @@ public class CandidateDBStore {
     public Candidate add(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement(
-     "INSERT INTO candidate (can_name, can_description, can_visible,"
+        "INSERT INTO candidate (can_name, can_description, can_visible,"
              + " can_city_id, can_photo) VALUES (?, ?, ?, ?, ?)",
-         PreparedStatement.RETURN_GENERATED_KEYS)) {
+            PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDescription());
             ps.setBoolean(3, candidate.isVisible());
@@ -93,16 +93,20 @@ public class CandidateDBStore {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement(
                  "SELECT can.can_id, can.can_name, can.can_description, can.can_visible, "
-                             + "can.can_city_id, can.can_photo, c.city_name AS city_name "
+                     + "can.can_city_id, can.can_photo, c.city_name AS city_name "
                      + "FROM candidate AS can "
                      + "JOIN city c on c.city_id = can.can_city_id "
                      + "WHERE can_id = ?")) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    City city = new City(it.getInt("can_city_id"), it.getString("city_name"));
-                    candidate = new Candidate(it.getInt("can_id"), it.getString("can_name"),
-                            it.getString("can_description"), city,
+                    candidate = new Candidate(
+                            it.getInt("can_id"),
+                            it.getString("can_name"),
+                            it.getString("can_description"),
+                            new City(
+                                    it.getInt("can_city_id"),
+                                    it.getString("city_name")),
                             it.getBoolean("can_visible"));
                     candidate.setPhoto(it.getBytes("can_photo"));
                 }
@@ -115,7 +119,8 @@ public class CandidateDBStore {
 
     public void delete(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("DELETE FROM candidate WHERE can_id = ?")) {
+             PreparedStatement ps = cn.prepareStatement(
+             "DELETE FROM candidate WHERE can_id = ?")) {
             ps.setInt(1, id);
             ps.execute();
         } catch (Exception e) {

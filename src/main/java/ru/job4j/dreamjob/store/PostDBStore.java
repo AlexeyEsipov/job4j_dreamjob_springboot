@@ -23,14 +23,21 @@ public class PostDBStore {
     public Collection<Post> findAll() {
         Collection<Post> posts = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post")
-        ) {
+             PreparedStatement ps =  cn.prepareStatement(
+                     "SELECT post_id, post_name, post_description, post_visible, "
+                            + "post_city_id, city_id, city_name "
+                            + "FROM post JOIN city ON post_city_id = city_id "
+                            + "ORDER BY post_city_id ")) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    City city = new City(1, "MSK");
-                    posts.add(new Post(it.getInt("post_id"), it.getString("post_name"),
-                            it.getString("post_description"), city,
-                            it.getBoolean("post_visible")));
+                    posts.add(new Post(
+                                        it.getInt("post_id"),
+                                        it.getString("post_name"),
+                                        it.getString("post_description"),
+                                        new City(
+                                                it.getInt("city_id"),
+                                                it.getString("city_name")),
+                                        it.getBoolean("post_visible")));
                 }
             }
         } catch (SQLException e) {
@@ -42,10 +49,9 @@ public class PostDBStore {
     public Post add(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement(
-                     "INSERT INTO post(post_name, post_description, post_visible, "
-                             + "post_city_id) VALUES (?, ?, ?, ?)",
-                     PreparedStatement.RETURN_GENERATED_KEYS)
-        ) {
+             "INSERT INTO post(post_name, post_description, post_visible, "
+                     + "post_city_id) VALUES (?, ?, ?, ?)",
+             PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
             ps.setBoolean(3, post.isVisible());
@@ -80,15 +86,22 @@ public class PostDBStore {
 
     public Post findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post WHERE post_id = ?")
-        ) {
+             PreparedStatement ps =  cn.prepareStatement(
+             "SELECT post_id, post_name, post_description, "
+                     + "post_visible, post_city_id, city_id, city_name "
+                     + "FROM post JOIN city ON city_id = post_city_id "
+                     + "WHERE post_id = ?")) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    City city = new City(1, "Msk");
-                    return new Post(it.getInt("post_id"), it.getString("post_name"),
-                            it.getString("post_description"), city,
-                            it.getBoolean("post_visible"));
+                    return new Post(
+                                    it.getInt("post_id"),
+                                    it.getString("post_name"),
+                                    it.getString("post_description"),
+                                    new City(
+                                            it.getInt("city_id"),
+                                            it.getString("city_name")),
+                                    it.getBoolean("post_visible"));
                 }
             }
         } catch (Exception e) {
@@ -99,7 +112,8 @@ public class PostDBStore {
 
     public void delete(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("DELETE FROM post WHERE post_id = ?")) {
+             PreparedStatement ps = cn.prepareStatement(
+             "DELETE FROM post WHERE post_id = ?")) {
             ps.setInt(1, id);
             ps.execute();
         } catch (Exception e) {
