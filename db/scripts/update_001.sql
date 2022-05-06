@@ -25,10 +25,11 @@ CREATE TABLE IF NOT EXISTS candidate (
     can_city_id int,
     can_photo bytea
 );
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
                        id SERIAL PRIMARY KEY,
+                       name TEXT,
                        email TEXT,
-                       password TEXT
+                       password TEXT,
+                       CONSTRAINT email_unique UNIQUE (email)
 );
-ALTER TABLE users ADD CONSTRAINT email_unique UNIQUE (email);
 
