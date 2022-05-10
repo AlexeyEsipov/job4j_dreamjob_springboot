@@ -58,7 +58,9 @@ public class CandidateControl {
     }
 
     @GetMapping("/formUpdateCandidate/{candidateId}")
-    public String formUpdateCandidate(Model model, @PathVariable("candidateId") int id, HttpSession session) {
+    public String formUpdateCandidate(Model model,
+                                      @PathVariable("candidateId") int id,
+                                      HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             user = new User();
