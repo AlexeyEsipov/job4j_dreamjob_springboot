@@ -46,6 +46,32 @@ public class PostDBStore {
         return posts;
     }
 
+    public Collection<Post> findAllVisible() {
+        Collection<Post> posts = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement(
+                     "SELECT post_id, post_name, post_description, post_visible, "
+                             + "post_city_id, city_id, city_name "
+                             + "FROM post JOIN city ON post_city_id = city_id WHERE post_visible "
+                             + "ORDER BY post_city_id ")) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    posts.add(new Post(
+                            it.getInt("post_id"),
+                            it.getString("post_name"),
+                            it.getString("post_description"),
+                            new City(
+                                    it.getInt("city_id"),
+                                    it.getString("city_name")),
+                            it.getBoolean("post_visible")));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return posts;
+    }
+
     public Post add(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement(

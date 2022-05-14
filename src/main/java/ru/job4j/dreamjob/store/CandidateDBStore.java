@@ -27,7 +27,37 @@ public class CandidateDBStore {
              PreparedStatement ps =  cn.prepareStatement(
              "SELECT can.can_id, can.can_name, can.can_description, can.can_visible, "
                  + "can.can_city_id, can.can_photo, city.city_name AS city_name "
-                 + "FROM candidate AS can JOIN city on can.can_city_id = city.city_id")) {
+                 + "FROM candidate AS can JOIN city on can.can_city_id = city.city_id "
+                 + "ORDER BY can.can_id;")) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    Candidate candidate = new Candidate(
+                            it.getInt("can_id"),
+                            it.getString("can_name"),
+                            it.getString("can_description"),
+                            new City(
+                                    it.getInt("can_city_id"),
+                                    it.getString("city_name")),
+                            it.getBoolean("can_visible"));
+                    candidate.setPhoto(it.getBytes("can_photo"));
+                    candidates.add(candidate);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return candidates;
+    }
+
+    public Collection<Candidate> findAllVisible() {
+        Collection<Candidate> candidates = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps =  cn.prepareStatement(
+                     "SELECT can.can_id, can.can_name, can.can_description, can.can_visible, "
+                             + "can.can_city_id, can.can_photo, city.city_name AS city_name "
+                             + "FROM candidate AS can JOIN city on can.can_city_id = city.city_id "
+                             + "WHERE can_visible "
+                             + "ORDER BY can.can_id;")) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
                     Candidate candidate = new Candidate(

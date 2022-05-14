@@ -33,6 +33,10 @@ public class CandidateService {
         return store.findAll();
     }
 
+    public Collection<Candidate> findAllVisible() {
+        return store.findAllVisible();
+    }
+
     public void delete(int id) {
         store.delete(id);
     }

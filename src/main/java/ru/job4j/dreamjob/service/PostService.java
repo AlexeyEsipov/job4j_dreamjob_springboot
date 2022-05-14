@@ -33,6 +33,10 @@ public class PostService {
         return store.findAll();
     }
 
+    public Collection<Post> findAllVisible() {
+        return store.findAllVisible();
+    }
+
     public void delete(int id) {
         store.delete(id);
     }

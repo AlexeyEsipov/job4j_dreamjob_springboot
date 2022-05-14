@@ -73,7 +73,7 @@ public class UserController {
         }
         HttpSession session = req.getSession();
         session.setAttribute("user", userDb.get());
-        return "redirect:/index";
+        return "redirect:/visible";
     }
 
     @PostMapping("/successRedirect")
