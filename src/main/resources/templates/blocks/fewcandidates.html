@@ -1,0 +1,43 @@
+<div th:fragment="fewcandidates">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Фото</th>
+            <th scope="col">Описание</th>
+            <th scope="col">Город</th>
+            <th scope="col">Дата</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="candidate: ${candidates}">
+            <td th:text="${candidate.id}"></td>
+            <td>
+                <a th:href="@{|/formUpdateCandidate/${candidate.id}|}">
+                    <i class="fa fa-edit"></i>
+                </a>
+                <a th:href="@{|/deleteCandidate/${candidate.id}|}">
+                    <i class="fa fa-trash"></i>
+                </a>
+
+                <span th:text="${candidate.name}"></span>
+
+                <span th:if="${candidate.visible}">
+                        <i class="fa fa-check-square-o"></i>
+                    </span>
+                <span th:if="${!candidate.visible}">
+                        <i class="fa fa-square-o"></i>
+                    </span>
+            </td>
+            <td>
+                <img th:width="150" th:high="150" th:src="@{|/photoCandidate/${candidate.id}|}" alt="Photo">
+            </td>
+            <td th:text="${candidate.description}"></td>
+            <!--                <td th:each="city : ${cities}" th:if="${city.id}==${candidate.city.id}" th:text="${city.name}" ></td>-->
+            <td th:text="${candidate.city.name}"></td>
+            <td th:text="${candidate.created}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
