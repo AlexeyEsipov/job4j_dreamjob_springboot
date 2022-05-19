@@ -1,6 +1,9 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
-    <head th:insert="blocks/css :: head"></head>
+<head>
+    <title>Работа мечты!</title>
+    <th:block th:include="blocks/css :: head"/>
+</head>
 <body>
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -12,17 +15,9 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <a class="nav-item nav-link active" href="#">Главная <span class="sr-only">(current)</span></a>
-<!--                <a th:if="${user.name == 'Гость'}" class="nav-item nav-link" th:href="@{/formRegistration}">Регистрация</a>-->
-                <div class="enter" th:insert="blocks/enter :: div"></div>
-<!--                <a th:if="${user.name == 'Гость'}" class="nav-item nav-link" th:href="@{/formRegistration}">Регистрация</a>-->
-<!--                <a class="nav-item nav-link" th:if="${user.name == 'Гость'}" th:href="@{/loginPage}">-->
-<!--                    <span th:text="${user.name}"></span>-->
-<!--                    <span> | Войти</span>-->
-<!--                </a>-->
-<!--                <a class="nav-item nav-link" th:if="${user.name != 'Гость'}" th:href="@{/logout}">-->
-<!--                    <span th:text="${user.name}"></span>-->
-<!--                    <span> | Выйти</span>-->
-<!--                </a>-->
+                <div class="enter">
+                    <th:block th:include="blocks/enter :: div"/>
+                </div>
             </div>
         </div>
     </nav>

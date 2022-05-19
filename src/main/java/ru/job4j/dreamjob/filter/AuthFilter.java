@@ -21,7 +21,7 @@ public class AuthFilter implements Filter {
         System.out.println("-----------e------------");
         if (uri.endsWith("loginPage") || uri.endsWith("login") || uri.endsWith("index")
                 || uri.endsWith("formRegistration") || uri.endsWith("registration")
-                || uri.endsWith("success")) {
+                || uri.endsWith("success") || uri.endsWith("fail")) {
             filterChain.doFilter(req, res);
             return;
         }
