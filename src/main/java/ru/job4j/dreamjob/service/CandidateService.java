@@ -1,7 +1,7 @@
 package ru.job4j.dreamjob.service;
 
 import org.springframework.stereotype.Service;
-import javax.annotation.concurrent.ThreadSafe;
+import net.jcip.annotations.ThreadSafe;
 import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.store.CandidateDBStore;
 

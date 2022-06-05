@@ -1,7 +1,7 @@
 package ru.job4j.dreamjob.persistence;
 
 import org.springframework.stereotype.Repository;
-import javax.annotation.concurrent.ThreadSafe;
+import net.jcip.annotations.ThreadSafe;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
